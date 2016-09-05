@@ -1,0 +1,84 @@
+<div ng-app="app" ng-cloak>
+
+    <div ng-controller="main" class="col-xs-12">
+
+        <br><br>
+        <div class="panel panel-default col-xs-12">
+            <div class="panel-body">
+                <button class="btn btn-primary" ng-click="newTransaction()">New Transaction</button>
+                <br><br>
+                <div class="input-group">
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-search"></span>
+                    </span>
+                    <input type="text" class="form-control" placeholder="Search" ng-model="searchText">
+                </div> 
+
+                <div class="col-xs-12" ng-cloak>
+                    <table class="table table-hover">
+                        <thead>
+                            <!-- <th>ID</th> -->
+                            <th></th>
+                            <th>Name</th>
+<!--                             <th>UIN</th>
+                            <th>Phone</th>
+                            <th>Email</th> -->
+                            <th>End Date</th>
+                            <th>Checked Out At</th>
+                            <th>Checked Out By</th>
+                            <th></th>
+                        </thead>
+                        <tbody ng-repeat="transaction in data | filter:searchText | orderBy:'-createdAt'">
+                        <tr >
+                            <!-- <td> {{ transaction.id }} </td> -->
+                            <td> <span ng-class="(show[$index]) ? 'glyphicon glyphicon-triangle-bottom' : 'glyphicon glyphicon-triangle-right'" ng-click="expand($index)"></span></td>
+                            <td> <div ng-mouseover="displayContactInformation(transaction)" ng-mouseleave="displayContactInformation(transaction)" ng-mouseenter="displayContactInformationLocation($event)"> {{ transaction.firstName + ' ' + transaction.lastName }} </div></td>
+<!--                             <td> {{ transaction.uin }} </td>
+                            <td> {{ transaction.phone }} </td>
+                            <td> {{ transaction.email }} </td> -->
+                            <td> {{ transaction.endDate | date:'MM-dd-yy hh:mm a' }} </td>
+                            <td> {{ transaction.createdAt | date:'MM-dd-yy hh:mm a' }} </td>
+                            <td> {{ transaction.checkedOutBy }} </td>
+                            <td> <button class="btn btn-primary">Check In</button> </td>
+                                
+                        </tr>
+                        <tr>
+                            <td colspan="3" ng-show="show[$index]">
+                                checked out item
+                            </td>
+                            <td colspan="3 " ng-show="show[$index]">
+                                returned items
+                            </td>
+
+                        </tr>
+                        </tbody>
+                        
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class=" contactInformation info" ng-show="showContactInformation" ng-style="contactStyle" ng-cloak>
+            <div>
+                Name: {{ displayContactData.firstName + ' ' +  displayContactData.lastName  }}
+                <br>
+                UIN: {{ displayContactData.uin }}
+                <br>
+                Phone: {{ displayContactData.phone }}
+                <br>
+                Email: {{ displayContactData.email }}
+                <br>
+            </div>
+        </div>
+
+        <script type="text/ng-template" id="modalTemplate.html">
+            <div class="modal-body">
+                <formly-form model="data" fields="fields" form="form">
+                    <button class="btn btn-primary" ng-disabled="form.$invalid" ng-click="submit()">Submit</button>
+                    <button class="btn btn-danger" ng-click="cancel()">Cancel</button>
+                </formly-form>
+            </div>  
+        </script>
+
+    </div>
+</div>

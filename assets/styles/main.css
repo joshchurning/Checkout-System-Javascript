@@ -1,0 +1,14 @@
+body {
+	background: #F7F7F7;
+}
+
+.contactInformation {
+	position: absolute;
+	z-index: 5;
+	background-color: rgb(176,224,230);
+	padding: 5px;
+}
+
+[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+  display: none !important;
+}
