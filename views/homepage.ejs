@@ -6,6 +6,7 @@
         <div class="panel panel-default col-xs-12">
             <div class="panel-body">
                 <button class="btn btn-primary" ng-click="newTransaction()">New Transaction</button>
+                <button class="btn btn-primary pull-right" ng-click="showReturned()">{{(showReturnedTest) ? 'Show Returned Transactions' : 'Show Checked Out Transactions'}}</button>
                 <br><br>
                 <div class="input-group">
                     <span class="input-group-addon">
@@ -17,37 +18,37 @@
                 <div class="col-xs-12" ng-cloak>
                     <table class="table table-hover">
                         <thead>
-                            <!-- <th>ID</th> -->
                             <th></th>
                             <th>Name</th>
-<!--                             <th>UIN</th>
-                            <th>Phone</th>
-                            <th>Email</th> -->
-                            <th>End Date</th>
-                            <th>Checked Out At</th>
+                            <th>Return Date</th>
+                            <th>Checked Out On</th>
                             <th>Checked Out By</th>
                             <th></th>
                         </thead>
-                        <tbody ng-repeat="transaction in data | filter:searchText | orderBy:'-createdAt'">
-                        <tr >
-                            <!-- <td> {{ transaction.id }} </td> -->
+                        <tbody ng-hide="(transaction.returned == showReturnedTest)" ng-repeat="transaction in data | filter:searchText | orderBy:'-createdAt'">
+                        <tr  ng-class="{ 'danger': ((transaction.endDate < currentDate) && (!transaction.returned))}">
                             <td> <span ng-class="(show[$index]) ? 'glyphicon glyphicon-triangle-bottom' : 'glyphicon glyphicon-triangle-right'" ng-click="expand($index)"></span></td>
-                            <td> <div ng-mouseover="displayContactInformation(transaction)" ng-mouseleave="displayContactInformation(transaction)" ng-mouseenter="displayContactInformationLocation($event)"> {{ transaction.firstName + ' ' + transaction.lastName }} </div></td>
-<!--                             <td> {{ transaction.uin }} </td>
-                            <td> {{ transaction.phone }} </td>
-                            <td> {{ transaction.email }} </td> -->
+                            <td> <div ng-mouseover="displayContactInformation(transaction)" ng-mouseleave="displayContactInformation(transaction)" ng-mouseenter="displayContactInformationLocation($event)"> {{ transaction.name }} </div></td>
                             <td> {{ transaction.endDate | date:'MM-dd-yy hh:mm a' }} </td>
                             <td> {{ transaction.createdAt | date:'MM-dd-yy hh:mm a' }} </td>
                             <td> {{ transaction.checkedOutBy }} </td>
-                            <td> <button class="btn btn-primary">Check In</button> </td>
+                            <td> <button class="btn btn-primary"  ng-hide="transaction.returned" ng-click="checkIn(transaction)">Check In</button> </td>
                                 
                         </tr>
-                        <tr>
-                            <td colspan="3" ng-show="show[$index]">
-                                checked out item
+                        <tr class="return">
+                            <td ng-show="show[$index]"></td>
+                            <td colspan="1" ng-show="show[$index]">
+                                <div ng-repeat="item in transaction.checkedOut">
+                                    {{ item }} <br>
+                                </div>
+                                <div ng-repeat="item in transaction.checkedIn">
+                                    {{ item.item }} 
+                                </div>
                             </td>
-                            <td colspan="3 " ng-show="show[$index]">
-                                returned items
+                            <td colspan="4 " ng-show="show[$index]">
+                                <div ng-repeat="item in transaction.checkedIn">
+                                 returned {{ item.timestamp | date:'MM-dd-yy hh:mm a'  }}  by {{ item.checkedIn }}
+                                </div>
                             </td>
 
                         </tr>
@@ -74,10 +75,39 @@
         <script type="text/ng-template" id="modalTemplate.html">
             <div class="modal-body">
                 <formly-form model="data" fields="fields" form="form">
-                    <button class="btn btn-primary" ng-disabled="form.$invalid" ng-click="submit()">Submit</button>
-                    <button class="btn btn-danger" ng-click="cancel()">Cancel</button>
+                    <button class="btn btn-primary" ng-show="hideButtons" ng-disabled="form.$invalid" ng-click="next()">Next</button>
+                    <button class="btn btn-primary" ng-hide="hideButtons" ng-disabled="form.$invalid" ng-click="submit()">Submit</button>
+                    <button class="btn btn-danger" ng-hide="hideButtons" ng-click="cancel()">Cancel</button>
                 </formly-form>
             </div>  
+        </script>
+        <script type="text/ng-template" id="checkInModal.html">
+            <div class="modal-header" ng-hide="hideButtons">Check the box of the items being turned in</div>
+            <div class="modal-body">
+                <formly-form model="data" fields="fields" form="form" >
+                    <button class="btn btn-primary" ng-show="hideButtons" ng-disabled="form.$invalid" ng-click="next()">Next</button>
+                    <button class="btn btn-primary" ng-hide="hideButtons" ng-click="checkAll()">{{ (checked) ? 'Uncheck All' : 'Check All' }}</button>
+                    <button class="btn btn-primary" ng-hide="hideButtons" ng-disabled="form.$invalid" ng-click="submit()">Submit</button>
+                    <button class="btn btn-danger" ng-hide="hideButtons" ng-click="cancel()">Cancel</button>
+                </formly-form>
+
+            </div> 
+        </script>
+        <!-- Put custom templates here -->
+
+        <script type="text/ng-template" id="test.html">
+            <div class="col-xs-12">
+            <br>
+            <formly-form model="data" fields="to.fields" form="to.form" >
+            </formly-form>
+        <table class="table table-hover quickfill">
+                <tbody  ng-repeat="name in to.fields[1].templateOptions.options">
+                    <tr>
+                        <td ng-click="to.autofill(name)"> {{ name.name }} </td>
+                    </tr>
+                </tbody>
+            </table>
+            </div>
         </script>
 
     </div>

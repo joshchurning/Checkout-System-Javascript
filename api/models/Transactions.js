@@ -9,11 +9,7 @@ module.exports = {
 	connection: 'mysql',
     tableName: 'Transactions',
     attributes: {
-    	firstName: {
-    		type: 'string',
-    		required: true
-    	},
-    	lastName: {
+    	name: {
     		type: 'string',
     		required: true
     	},
@@ -30,13 +26,22 @@ module.exports = {
     		required: true
     	},
     	endDate: {
-    		type: 'date',
+    		type: 'string',
     		required: true
     	},
     	checkedOutBy: {
     		type: 'string',
     		required: true
     	},
+        itemsCheckedOut: {
+            type: 'string',
+            required: true
+        },
+        itemsCheckedIn: {
+            type: 'string',
+            required: true,
+            size: 2048
+        }
     }
 };
 

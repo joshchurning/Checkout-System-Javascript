@@ -1,3 +1,3 @@
-# Online Checkout System - Javascript
+# perftech
 
 a [Sails](http://sailsjs.org) application
