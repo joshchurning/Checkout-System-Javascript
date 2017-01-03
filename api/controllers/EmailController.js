@@ -14,11 +14,11 @@ module.exports = {
 		    fullName: req.param('fullName'),
 		    endDate: req.param('endDate'),
 		    items: req.param('items'),
-		    senderEmail: "joshchurning@gmai.com"
+		    senderEmail: "" //INSET SENDING EMAIL ADDRESS HERE
 		  },
 		  {
-		    from: "PerfTech <joshchurning@gmai.com>",
-		    to: "joshchurning@tamu.edu",
+		    from: "PerfTech <>", //INSET SENDING EMAIL ADDRESS HERE
+		    to: "",//INSET OUTGOING EMAIL ADDRESS HERE
 		    subject: "SailsJS email test"
 		  },
 		  function(err) {console.log(err || "Email is sent");}
